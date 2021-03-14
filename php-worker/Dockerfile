@@ -172,7 +172,7 @@ RUN if [ ${INSTALL_OCI8} = true ] && [ $(php -r "echo PHP_MAJOR_VERSION;") = "7"
       echo "instantclient,${ORACLE_HOME}" | pecl install oci8 && \
       echo 'extension=oci8.so' > /etc/php7/conf.d/30-oci8.ini \
     #  Clean up
-    apk del php7-pear php7-dev gcc musl-dev && \
+    apk del -q php7-pear php7-dev gcc musl-dev && \
     rm -rf /tmp/*.zip /tmp/pear/ && \
     docker-php-ext-configure pdo_oci --with-pdo-oci=instantclient,/usr/local/instantclient \
         && docker-php-ext-configure pdo_dblib --with-libdir=/lib \
