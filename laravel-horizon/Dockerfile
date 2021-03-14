@@ -19,8 +19,8 @@ RUN if [ ${CHANGE_SOURCE} = true ]; then \
     sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/' /etc/apk/repositories \
 ;fi
 
-RUN apk update -q
-  apk add -q wget \
+RUN apk update -q \
+  && apk add -q wget \
     curl \
     git \
     build-base \
@@ -218,7 +218,7 @@ RUN if [ ${INSTALL_YAML} = true ]; then \
      && docker-php-ext-enable yaml \
      && pecl clear-cache \
      && docker-php-source delete \
-     && apk del temp \
+     && apk del -q temp \
 ;fi
 
 
