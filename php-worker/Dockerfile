@@ -11,6 +11,8 @@ LABEL maintainer="Mahmoud Zalt <mahmoud@zalt.me>"
 
 ARG LARADOCK_PHP_VERSION
 
+RUN
+
 # If you're in China, or you need to change sources, will be set CHANGE_SOURCE to true in .env.
 
 ARG CHANGE_SOURCE=false
@@ -19,22 +21,24 @@ RUN if [ ${CHANGE_SOURCE} = true ]; then \
     sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/' /etc/apk/repositories \
 ;fi
 
-RUN apk --update add wget \
-  curl \
-  git \
-  build-base \
-  libmemcached-dev \
-  libmcrypt-dev \
-  libxml2-dev \
-  pcre-dev \
-  zlib-dev \
-  autoconf \
-  cyrus-sasl-dev \
-  libgsasl-dev \
-  oniguruma-dev \
-  openssl \
-  openssl-dev \
-  supervisor
+RUN
+  apk update -q \
+  && apk add -q wget \
+    curl \
+    git \
+    build-base \
+    libmemcached-dev \
+    libmcrypt-dev \
+    libxml2-dev \
+    pcre-dev \
+    zlib-dev \
+    autoconf \
+    cyrus-sasl-dev \
+    libgsasl-dev \
+    oniguruma-dev \
+    openssl \
+    openssl-dev \
+    supervisor
 
 RUN docker-php-ext-install mysqli mbstring pdo pdo_mysql tokenizer xml pcntl
 RUN if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
@@ -55,14 +59,14 @@ RUN addgroup -g ${PGID} laradock && \
 #Install BZ2:
 ARG INSTALL_BZ2=false
 RUN if [ ${INSTALL_BZ2} = true ]; then \
-  apk --update add bzip2-dev; \
+  apk  add -q bzip2-dev; \
   docker-php-ext-install bz2; \
 fi
 
 #Install GD package:
 ARG INSTALL_GD=false
 RUN if [ ${INSTALL_GD} = true ]; then \
-   apk add --update --no-cache freetype-dev libjpeg-turbo-dev jpeg-dev libpng-dev; \
+   apk add -q freetype-dev libjpeg-turbo-dev jpeg-dev libpng-dev; \
    docker-php-ext-configure gd --with-freetype-dir=/usr/lib/ --with-jpeg-dir=/usr/lib/ --with-png-dir=/usr/lib/ && \
    docker-php-ext-install gd \
 ;fi
@@ -73,9 +77,8 @@ ARG IMAGEMAGICK_VERSION=latest
 ENV IMAGEMAGICK_VERSION ${IMAGEMAGICK_VERSION}
 RUN set -eux; \
   if [ ${INSTALL_IMAGEMAGICK} = true ]; then \
-    apk add --update --no-cache imagemagick-dev; \
+    apk add -q imagemagick-dev; \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ]; then \
-      apk add --update --no-cache git && \
       cd /tmp && \
       if [ ${IMAGEMAGICK_VERSION} = "latest" ]; then \
         git clone https://github.com/Imagick/imagick; \
@@ -98,7 +101,7 @@ RUN set -eux; \
 #Install GMP package:
 ARG INSTALL_GMP=false
 RUN if [ ${INSTALL_GMP} = true ]; then \
-   apk add --update --no-cache gmp gmp-dev \
+   apk add -q gmp gmp-dev \
    && docker-php-ext-install gmp \
 ;fi
 
@@ -124,7 +127,7 @@ ENV LD_LIBRARY_PATH="/usr/local/instantclient"
 ENV ORACLE_HOME="/usr/local/instantclient"
 
 RUN if [ ${INSTALL_OCI8} = true ] && [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
-    apk add make php7-pear php7-dev gcc musl-dev libnsl libaio poppler-utils libzip-dev zip unzip libaio-dev freetds-dev && \
+    apk add -q make php7-pear php7-dev gcc musl-dev libnsl libaio poppler-utils libzip-dev zip unzip libaio-dev freetds-dev && \
     ## Download and unarchive Instant Client v11
       curl -o /tmp/basic.zip https://raw.githubusercontent.com/bumpx/oracle-instantclient/master/instantclient-basic-linux.x64-11.2.0.4.0.zip && \
       curl -o /tmp/sdk.zip https://raw.githubusercontent.com/bumpx/oracle-instantclient/master/instantclient-sdk-linux.x64-11.2.0.4.0.zip && \
@@ -158,15 +161,15 @@ RUN if [ ${INSTALL_OCI8} = true ] && [ $(php -r "echo PHP_MAJOR_VERSION;") = "7"
 # Install PostgreSQL drivers:
 ARG INSTALL_PGSQL=false
 RUN if [ ${INSTALL_PGSQL} = true ]; then \
-    apk --update add postgresql-dev \
-        && docker-php-ext-install pdo_pgsql \
+    apk add -q postgresql-dev \
+    && docker-php-ext-install pdo_pgsql \
 ;fi
 
 # Install ZipArchive:
 ARG INSTALL_ZIP_ARCHIVE=false
 RUN set -eux; \
   if [ ${INSTALL_ZIP_ARCHIVE} = true ]; then \
-    apk --update add libzip-dev && \
+    apk add -q libzip-dev && \
     if [ ${LARADOCK_PHP_VERSION} = "7.3" ] || [ ${LARADOCK_PHP_VERSION} = "7.4" ] || [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ]; then \
       docker-php-ext-configure zip; \
     else \
@@ -179,20 +182,21 @@ RUN set -eux; \
 # Install MySQL Client:
 ARG INSTALL_MYSQL_CLIENT=false
 RUN if [ ${INSTALL_MYSQL_CLIENT} = true ]; then \
-      apk --update add mysql-client \
+      apk add -q mysql-client \
 ;fi
 
 # Install FFMPEG:
 ARG INSTALL_FFMPEG=false
 RUN if [ ${INSTALL_FFMPEG} = true ]; then \
-    apk --update add ffmpeg \
+    apk add -q ffmpeg \
 ;fi
 
 # Install BBC Audio Waveform Image Generator:
 ARG INSTALL_AUDIOWAVEFORM=false
 RUN if [ ${INSTALL_AUDIOWAVEFORM} = true ]; then \
-   apk add git make cmake gcc g++ libmad-dev libid3tag-dev libsndfile-dev gd-dev boost-dev libgd libpng-dev zlib-dev \
-   && apk add autoconf automake libtool gettext \
+   apk add -q git make cmake gcc g++ libmad-dev libid3tag-dev libsndfile-dev \
+      gd-dev boost-dev libgd libpng-dev zlib-dev \
+      autoconf automake libtool gettext \
    && wget https://github.com/xiph/flac/archive/1.3.3.tar.gz \
    && tar xzf 1.3.3.tar.gz \
    && cd flac-1.3.3 \
@@ -219,7 +223,7 @@ RUN if [ ${INSTALL_AUDIOWAVEFORM} = true ]; then \
 ARG INSTALL_AMQP=false
 
 RUN if [ ${INSTALL_AMQP} = true ]; then \
-    apk --update add rabbitmq-c rabbitmq-c-dev && \
+    apk add -q rabbitmq-c rabbitmq-c-dev && \
     pecl install amqp && \
     docker-php-ext-enable amqp && \
     docker-php-ext-install sockets \
@@ -232,14 +236,15 @@ RUN if [ ${INSTALL_GEARMAN} = true ]; then \
     sed -i "\$ahttp://dl-cdn.alpinelinux.org/alpine/edge/main" /etc/apk/repositories && \
     sed -i "\$ahttp://dl-cdn.alpinelinux.org/alpine/edge/community" /etc/apk/repositories && \
     sed -i "\$ahttp://dl-cdn.alpinelinux.org/alpine/edge/testing" /etc/apk/repositories && \
-    apk --update add php7-gearman && \
+    apk update -q \
+    apk add -q php7-gearman && \
     sh -c 'echo "extension=/usr/lib/php7/modules/gearman.so" > /usr/local/etc/php/conf.d/gearman.ini' \
 ;fi
 
 # Install Cassandra drivers:
 ARG INSTALL_CASSANDRA=false
 RUN if [ ${INSTALL_CASSANDRA} = true ]; then \
-  apk --update add cassandra-cpp-driver \
+  apk add -q cassandra-cpp-driver \
   ;fi
 
 WORKDIR /usr/src
@@ -262,7 +267,7 @@ ARG PHALCON_VERSION
 ENV PHALCON_VERSION ${PHALCON_VERSION}
 
 RUN if [ $INSTALL_PHALCON = true ]; then \
-    apk --update add unzip gcc make re2c bash\
+    apk add -q unzip gcc make re2c bash\
     && git clone https://github.com/jbboehr/php-psr.git \
     && cd php-psr \
     && phpize \
@@ -279,7 +284,7 @@ RUN if [ $INSTALL_PHALCON = true ]; then \
 
 ARG INSTALL_GHOSTSCRIPT=false
 RUN if [ $INSTALL_GHOSTSCRIPT = true ]; then \
-    apk --update add ghostscript \
+    apk add -q ghostscript \
 ;fi
 
 # Install Redis package:
@@ -332,7 +337,7 @@ RUN if [ ${INSTALL_TAINT} = true ]; then \
 ARG INSTALL_IMAP=false
 
 RUN if [ ${INSTALL_IMAP} = true ]; then \
-    apk add --update imap-dev openssl-dev && \
+    apk add -q imap-dev openssl-dev && \
     docker-php-ext-configure imap --with-imap --with-imap-ssl && \
     docker-php-ext-install imap \
 ;fi

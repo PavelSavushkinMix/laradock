@@ -65,6 +65,7 @@ RUN set -xe; \
     usermod -p "*" laradock -s /bin/bash && \
     apt-get install -yqq \
       apt-utils \
+      git \
       #
       #--------------------------------------------------------------------------
       # Mandatory Software's Installation
@@ -225,7 +226,7 @@ ARG DRUSH_VERSION
 ENV DRUSH_VERSION ${DRUSH_VERSION}
 
 RUN if [ ${INSTALL_DRUSH} = true ]; then \
-    apt-get -y install mysql-client && \
+    apt-get install -qqy mysql-client && \
     # Install Drush with the phar file.
     curl -fsSL -o /usr/local/bin/drush https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar | bash && \
     chmod +x /usr/local/bin/drush && \
@@ -253,7 +254,7 @@ RUN if [ ${INSTALL_WP_CLI} = true ]; then \
 
 ARG INSTALL_BZ2=false
 RUN if [ ${INSTALL_BZ2} = true ]; then \
-  apt-get -y install php${LARADOCK_PHP_VERSION}-bz2 \
+  apt-get install -yqq php${LARADOCK_PHP_VERSION}-bz2 \
 ;fi
 
 ###########################################################################
@@ -267,7 +268,7 @@ ARG PHP_VERSION=${LARADOCK_PHP_VERSION}
 
 RUN if [ ${INSTALL_GMP} = true ]; then \
   # Install the PHP GMP extension
-  apt-get -y install php${LARADOCK_PHP_VERSION}-gmp \
+  apt-get install -yqq php${LARADOCK_PHP_VERSION}-gmp \
 ;fi
 
 ###########################################################################
@@ -280,7 +281,7 @@ ARG INSTALL_SSH2=false
 
 RUN if [ ${INSTALL_SSH2} = true ]; then \
   # Install the PHP SSH2 extension
-  apt-get -y install libssh2-1-dev php${LARADOCK_PHP_VERSION}-ssh2 \
+  apt-get install -yqq libssh2-1-dev php${LARADOCK_PHP_VERSION}-ssh2 \
 ;fi
 
 ###########################################################################
@@ -293,7 +294,7 @@ ARG INSTALL_SOAP=false
 
 RUN if [ ${INSTALL_SOAP} = true ]; then \
   # Install the PHP SOAP extension
-  apt-get -y install libxml2-dev php${LARADOCK_PHP_VERSION}-soap \
+  apt-get install -yqq libxml2-dev php${LARADOCK_PHP_VERSION}-soap \
 ;fi
 
 ###########################################################################
@@ -306,7 +307,7 @@ ARG INSTALL_XSL=false
 
 RUN if [ ${INSTALL_XSL} = true ]; then \
   # Install the PHP XSL extension
-  apt-get -y install libxslt-dev php${LARADOCK_PHP_VERSION}-xsl \
+  apt-get install -yqq libxslt-dev php${LARADOCK_PHP_VERSION}-xsl \
 ;fi
 
 
@@ -317,8 +318,8 @@ RUN if [ ${INSTALL_XSL} = true ]; then \
 ARG INSTALL_LDAP=false
 
 RUN if [ ${INSTALL_LDAP} = true ]; then \
-    apt-get install -y libldap2-dev && \
-    apt-get install -y php${LARADOCK_PHP_VERSION}-ldap \
+    apt-get install -yqq libldap2-dev \
+      php${LARADOCK_PHP_VERSION}-ldap \
 ;fi
 
 ###########################################################################
@@ -328,7 +329,7 @@ RUN if [ ${INSTALL_LDAP} = true ]; then \
 ARG INSTALL_SMB=false
 
 RUN if [ ${INSTALL_SMB} = true ]; then \
-    apt-get install -y smbclient php-smbclient coreutils \
+    apt-get install -yqq smbclient php-smbclient coreutils \
 ;fi
 
 ###########################################################################
@@ -338,7 +339,7 @@ RUN if [ ${INSTALL_SMB} = true ]; then \
 ARG INSTALL_IMAP=false
 
 RUN if [ ${INSTALL_IMAP} = true ]; then \
-    apt-get install -y php${LARADOCK_PHP_VERSION}-imap \
+    apt-get install -yqq php${LARADOCK_PHP_VERSION}-imap \
 ;fi
 
 ###########################################################################
@@ -350,7 +351,7 @@ USER root
 ARG INSTALL_SUBVERSION=false
 
 RUN if [ ${INSTALL_SUBVERSION} = true ]; then \
-    apt-get install -y subversion \
+    apt-get install -yqq subversion \
 ;fi
 
 
@@ -436,7 +437,7 @@ ARG INSTALL_PHPDBG=false
 
 RUN if [ ${INSTALL_PHPDBG} = true ]; then \
     # Load the xdebug extension only with phpunit commands
-    apt-get install -y --force-yes php${LARADOCK_PHP_VERSION}-phpdbg \
+    apt-get install -yqq --force-yes php${LARADOCK_PHP_VERSION}-phpdbg \
 ;fi
 
 ###########################################################################
@@ -453,7 +454,7 @@ RUN if [ ${INSTALL_XDEBUG} = false -a ${INSTALL_BLACKFIRE} = true ]; then \
     curl -L https://packages.blackfire.io/gpg.key | apt-key add - && \
     echo "deb http://packages.blackfire.io/debian any main" | tee /etc/apt/sources.list.d/blackfire.list && \
     apt-get update -yqq && \
-    apt-get install blackfire-agent \
+    apt-get install -yqq blackfire-agent \
 ;fi
 
 ###########################################################################
@@ -503,7 +504,7 @@ RUN if [ ${INSTALL_MONGO} = true ]; then \
 ARG INSTALL_AMQP=false
 
 RUN if [ ${INSTALL_AMQP} = true ]; then \
-    apt-get install librabbitmq-dev -y && \
+    apt-get install -yqq librabbitmq-dev -y && \
     pecl -q install amqp && \
     echo "extension=amqp.so" >> /etc/php/${LARADOCK_PHP_VERSION}/mods-available/amqp.ini && \
     ln -s /etc/php/${LARADOCK_PHP_VERSION}/mods-available/amqp.ini /etc/php/${LARADOCK_PHP_VERSION}/cli/conf.d/30-amqp.ini \
@@ -516,7 +517,7 @@ RUN if [ ${INSTALL_AMQP} = true ]; then \
 ARG INSTALL_CASSANDRA=false
 
 RUN if [ ${INSTALL_CASSANDRA} = true ]; then \
-    apt-get install libgmp-dev -y && \
+    apt-get install -yqq libgmp-dev && \
     curl https://downloads.datastax.com/cpp-driver/ubuntu/18.04/dependencies/libuv/v1.28.0/libuv1-dev_1.28.0-1_amd64.deb -o libuv1-dev.deb && \
     curl https://downloads.datastax.com/cpp-driver/ubuntu/18.04/dependencies/libuv/v1.28.0/libuv1_1.28.0-1_amd64.deb -o libuv1.deb && \
     curl https://downloads.datastax.com/cpp-driver/ubuntu/18.04/cassandra/v2.12.0/cassandra-cpp-driver-dev_2.12.0-1_amd64.deb -o cassandra-cpp-driver-dev.deb && \
@@ -548,7 +549,7 @@ ARG INSTALL_GEARMAN=false
 
 RUN if [ ${INSTALL_GEARMAN} = true ]; then \
     add-apt-repository -y ppa:ondrej/pkg-gearman && \
-    apt-get update && \
+    apt-get update -yqq && \
     apt-get install php-gearman -y  \
 ;fi
 
@@ -559,7 +560,6 @@ RUN if [ ${INSTALL_GEARMAN} = true ]; then \
 ARG INSTALL_PHPREDIS=false
 
 RUN if [ ${INSTALL_PHPREDIS} = true ]; then \
-    apt-get update -yqq && \
     apt-get install -yqq php-redis \
 ;fi
 
@@ -608,8 +608,7 @@ RUN if [ "${INSTALL_TAINT}" = true ]; then \
 ARG INSTALL_LIBPNG=false
 
 RUN if [ ${INSTALL_LIBPNG} = true ]; then \
-    apt-get update && \
-    apt-get install libpng16-16 \
+    apt-get install -yqq libpng16-16 \
 ;fi
 
 ###########################################################################
@@ -658,7 +657,7 @@ RUN if [ ${INSTALL_FSWATCH} = true ]; then \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 47FE03C1 \
     && add-apt-repository -y ppa:hadret/fswatch \
     || apt-get update -yqq \
-    && apt-get -y install fswatch \
+    && apt-get install -yqq fswatch \
 ;fi
 
 ###########################################################################
@@ -669,8 +668,7 @@ RUN if [ ${INSTALL_FSWATCH} = true ]; then \
 ARG INSTALL_GRAPHVIZ=false
 
 RUN if [ ${INSTALL_GRAPHVIZ} = true ]; then \
-    apt-get update && \
-    apt-get install -y graphviz \
+    apt-get install -yqq graphviz \
 ;fi
 
 # IonCube Loader
@@ -696,7 +694,7 @@ USER root
 ARG INSTALL_DRUPAL_CONSOLE=false
 
 RUN if [ ${INSTALL_DRUPAL_CONSOLE} = true ]; then \
-    apt-get -y install mysql-client && \
+    apt-get install -yqq mysql-client && \
     curl https://drupalconsole.com/installer -L -o drupal.phar && \
     mv drupal.phar /usr/local/bin/drupal && \
     chmod +x /usr/local/bin/drupal \
@@ -860,7 +858,7 @@ ARG INSTALL_AEROSPIKE=false
 RUN set -xe; \
   if [ ${INSTALL_AEROSPIKE} = true ]; then \
     # Fix dependencies for PHPUnit within aerospike extension
-    apt-get -y install sudo wget && \
+    apt-get install -yqq sudo wget && \
     # Install the php aerospike extension
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
       curl -L -o /tmp/aerospike-client-php.tar.gz https://github.com/aerospike/aerospike-client-php5/archive/master.tar.gz; \
@@ -907,22 +905,20 @@ ENV OCI_VERSION=12
 
 RUN if [ ${INSTALL_OCI8} = true ]; then \
   # Install wget
-  apt-get update && apt-get install --no-install-recommends -y wget \
+  apt-get install -yqq --no-install-recommends -y wget \
   # Install Oracle Instantclient
   && mkdir /opt/oracle \
-      && cd /opt/oracle \
-      && wget ${ORACLE_INSTANT_CLIENT_MIRROR}instantclient-basic-linux.x64-12.1.0.2.0.zip \
-      && wget ${ORACLE_INSTANT_CLIENT_MIRROR}instantclient-sdk-linux.x64-12.1.0.2.0.zip \
-      && unzip /opt/oracle/instantclient-basic-linux.x64-12.1.0.2.0.zip -d /opt/oracle \
-      && unzip /opt/oracle/instantclient-sdk-linux.x64-12.1.0.2.0.zip -d /opt/oracle \
-      && ln -s /opt/oracle/instantclient_12_1/libclntsh.so.12.1 /opt/oracle/instantclient_12_1/libclntsh.so \
-      && ln -s /opt/oracle/instantclient_12_1/libclntshcore.so.12.1 /opt/oracle/instantclient_12_1/libclntshcore.so \
-      && ln -s /opt/oracle/instantclient_12_1/libocci.so.12.1 /opt/oracle/instantclient_12_1/libocci.so \
-      && rm -rf /opt/oracle/*.zip \
+  && cd /opt/oracle \
+  && wget ${ORACLE_INSTANT_CLIENT_MIRROR}instantclient-basic-linux.x64-12.1.0.2.0.zip \
+  && wget ${ORACLE_INSTANT_CLIENT_MIRROR}instantclient-sdk-linux.x64-12.1.0.2.0.zip \
+  && unzip /opt/oracle/instantclient-basic-linux.x64-12.1.0.2.0.zip -d /opt/oracle \
+  && unzip /opt/oracle/instantclient-sdk-linux.x64-12.1.0.2.0.zip -d /opt/oracle \
+  && ln -s /opt/oracle/instantclient_12_1/libclntsh.so.12.1 /opt/oracle/instantclient_12_1/libclntsh.so \
+  && ln -s /opt/oracle/instantclient_12_1/libclntshcore.so.12.1 /opt/oracle/instantclient_12_1/libclntshcore.so \
+  && ln -s /opt/oracle/instantclient_12_1/libocci.so.12.1 /opt/oracle/instantclient_12_1/libocci.so \
+  && rm -rf /opt/oracle/*.zip \
   # Install PHP extensions deps
-  && apt-get update \
-      && apt-get install --no-install-recommends -y \
-          libaio-dev && \
+  && apt-get install --no-install-recommends -yqq libaio-dev && \
   # Install PHP extensions
   if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
     echo 'instantclient,/opt/oracle/instantclient_12_1/' | pecl install oci8-2.0.10; \
@@ -945,7 +941,7 @@ RUN set -xe; \
   if [ ${INSTALL_V8JS} = true ]; then \
     add-apt-repository -y ppa:pinepain/libv8-archived \
     && apt-get update -yqq \
-    && apt-get install -y libv8-5.4 && \
+    && apt-get install -yqq libv8-5.4 && \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
       pecl install v8js-0.6.4; \
     else \
@@ -1029,8 +1025,8 @@ ARG INSTALL_LINUXBREW=false
 
 RUN if [ ${INSTALL_LINUXBREW} = true ]; then \
     # Preparation
-    apt-get upgrade -y && \
-    apt-get install -y build-essential make cmake scons curl git \
+    apt-get upgrade -yqq && \
+    apt-get install -yqq build-essential make cmake scons curl \
       ruby autoconf automake autoconf-archive \
       gettext libtool flex bison \
       libbz2-dev libcurl4-openssl-dev \
@@ -1056,7 +1052,7 @@ ARG INSTALL_MSSQL=false
 RUN set -eux; \
   if [ ${INSTALL_MSSQL} = true ]; then \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-      apt-get -y install php5.6-sybase freetds-bin freetds-common libsybdb5 \
+      apt-get install -yqq php5.6-sybase freetds-bin freetds-common libsybdb5 \
       && php -m | grep -q 'mssql' \
       && php -m | grep -q 'pdo_dblib' \
     ;else \
@@ -1067,7 +1063,7 @@ RUN set -eux; \
       curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
       curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
       apt-get update -yqq && \
-      ACCEPT_EULA=Y apt-get install -y msodbcsql17 mssql-tools unixodbc unixodbc-dev libgss3 odbcinst locales && \
+      ACCEPT_EULA=Y apt-get install -yqq msodbcsql17 mssql-tools unixodbc unixodbc-dev libgss3 odbcinst locales && \
       ln -sfn /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd && \
       ln -sfn /opt/mssql-tools/bin/bcp /usr/bin/bcp && \
       echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
@@ -1110,7 +1106,7 @@ USER root
 ARG INSTALL_IMAGE_OPTIMIZERS=false
 
 RUN if [ ${INSTALL_IMAGE_OPTIMIZERS} = true ]; then \
-    apt-get install -y jpegoptim optipng pngquant gifsicle && \
+    apt-get install -yqq jpegoptim optipng pngquant gifsicle && \
     if [ ${INSTALL_NODE} = true ]; then \
         exec bash && . ~/.bashrc && npm install -g svgo \
     ;fi\
@@ -1145,7 +1141,7 @@ RUN if [ ${INSTALL_SYMFONY} = true ]; then \
 ARG INSTALL_PYTHON=false
 
 RUN if [ ${INSTALL_PYTHON} = true ]; then \
-  apt-get -y install python python-pip python-dev build-essential  \
+  apt-get install -yqq python python-pip python-dev build-essential  \
   && python -m pip install --upgrade pip  \
   && python -m pip install --upgrade virtualenv \
 ;fi
@@ -1157,7 +1153,7 @@ RUN if [ ${INSTALL_PYTHON} = true ]; then \
 ARG INSTALL_PYTHON3=false
 
 RUN if [ ${INSTALL_PYTHON3} = true ]; then \
-  apt-get -y install python3 python3-pip python3-dev build-essential  \
+  apt-get install -yqq python3 python3-pip python3-dev build-essential  \
   && python3 -m pip install --upgrade --force-reinstall pip  \
   && python3 -m pip install --upgrade virtualenv \
 ;fi
@@ -1204,9 +1200,8 @@ ARG IMAGEMAGICK_VERSION=latest
 ENV IMAGEMAGICK_VERSION ${IMAGEMAGICK_VERSION}
 
 RUN if [ ${INSTALL_IMAGEMAGICK} = true ]; then \
-    apt-get install -y libmagickwand-dev imagemagick && \
+    apt-get install -yqq libmagickwand-dev imagemagick && \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ]; then \
-      apt-get install -y git && \
       cd /tmp && \
       if [ ${IMAGEMAGICK_VERSION} = "latest" ]; then \
         git clone https://github.com/Imagick/imagick; \
@@ -1235,7 +1230,7 @@ USER root
 ARG INSTALL_TERRAFORM=false
 
 RUN if [ ${INSTALL_TERRAFORM} = true ]; then \
-    apt-get -y install sudo wget unzip \
+    apt-get install -yqq sudo wget unzip \
     && wget https://releases.hashicorp.com/terraform/0.10.6/terraform_0.10.6_linux_amd64.zip \
     && unzip terraform_0.10.6_linux_amd64.zip \
     && mv terraform /usr/local/bin \
@@ -1251,11 +1246,11 @@ ARG INSTALL_PG_CLIENT=false
 
 RUN if [ ${INSTALL_PG_CLIENT} = true ]; then \
     # Install the pgsql client
-    apt-get install wget \
+    apt-get install -yqq wget \
     && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
     && echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list \
-    && apt-get update \
-    && apt-get -y install postgresql-client-12 \
+    && apt-get update 0yqq \
+    && apt-get install -yqq postgresql-client-12 \
 ;fi
 
 ###########################################################################
@@ -1269,13 +1264,11 @@ ENV CHROME_DRIVER_VERSION ${CHROME_DRIVER_VERSION}
 ARG INSTALL_DUSK_DEPS=false
 
 RUN if [ ${INSTALL_DUSK_DEPS} = true ]; then \
-  apt-get -y install zip wget unzip xdg-utils \
+  apt-get install -yqq zip wget unzip xdg-utils \
     libxpm4 libxrender1 libgtk2.0-0 libnss3 libgconf-2-4 xvfb \
     gtk2-engines-pixbuf xfonts-cyrillic xfonts-100dpi xfonts-75dpi \
     xfonts-base xfonts-scalable x11-apps \
   && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-  && dpkg -i --force-depends google-chrome-stable_current_amd64.deb \
-  && apt-get -y -f install \
   && dpkg -i --force-depends google-chrome-stable_current_amd64.deb \
   && rm google-chrome-stable_current_amd64.deb \
   && wget https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip \
@@ -1293,7 +1286,7 @@ ARG LARADOCK_PHALCON_VERSION
 ENV LARADOCK_PHALCON_VERSION ${LARADOCK_PHALCON_VERSION}
 
 RUN if [ $INSTALL_PHALCON = true ]; then \
-    apt-get update && apt-get install -y unzip libpcre3-dev gcc make re2c git automake autoconf\
+    apt-get install -yqq unzip libpcre3-dev gcc make re2c automake autoconf\
     && git clone https://github.com/jbboehr/php-psr.git \
     && cd php-psr \
     && phpize \
@@ -1320,8 +1313,7 @@ USER root
 ARG INSTALL_MYSQL_CLIENT=false
 
 RUN if [ ${INSTALL_MYSQL_CLIENT} = true ]; then \
-    apt-get update -yqq && \
-    apt-get -y install mysql-client \
+    apt-get -yqq install mysql-client \
 ;fi
 
 ###########################################################################
@@ -1333,8 +1325,7 @@ USER root
 ARG INSTALL_PING=false
 
 RUN if [ ${INSTALL_PING} = true ]; then \
-    apt-get update -yqq && \
-    apt-get -y install inetutils-ping \
+    apt-get -yqq install inetutils-ping \
 ;fi
 
 ###########################################################################
@@ -1346,8 +1337,7 @@ USER root
 ARG INSTALL_SSHPASS=false
 
 RUN if [ ${INSTALL_SSHPASS} = true ]; then \
-    apt-get update -yqq && \
-    apt-get -y install sshpass \
+    apt-get -yqq install sshpass \
 ;fi
 
 ###########################################################################
@@ -1374,7 +1364,7 @@ USER root
 ARG INSTALL_YAML=false
 
 RUN if [ ${INSTALL_YAML} = true ]; then \
-    apt-get install libyaml-dev -y ; \
+    apt-get install -yqq libyaml-dev; \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
         pecl install -a yaml-1.3.2; \
     else \
@@ -1391,7 +1381,7 @@ RUN if [ ${INSTALL_YAML} = true ]; then \
 ARG INSTALL_RDKAFKA=false
 
 RUN if [ ${INSTALL_RDKAFKA} = true ]; then \
-    apt-get install -y librdkafka-dev && \
+    apt-get install -yqq librdkafka-dev && \
     pecl install rdkafka && \
     echo "extension=rdkafka.so" >> /etc/php/${LARADOCK_PHP_VERSION}/mods-available/rdkafka.ini && \
     ln -s /etc/php/${LARADOCK_PHP_VERSION}/mods-available/rdkafka.ini /etc/php/${LARADOCK_PHP_VERSION}/cli/conf.d/20-rdkafka.ini \
@@ -1407,7 +1397,7 @@ USER root
 ARG INSTALL_FFMPEG=false
 
 RUN if [ ${INSTALL_FFMPEG} = true ]; then \
-  apt-get -y install ffmpeg \
+  apt-get -yqq install ffmpeg \
 ;fi
 
 
@@ -1420,7 +1410,7 @@ USER root
 ARG INSTALL_AUDIOWAVEFORM=false
 
 RUN if [ ${INSTALL_AUDIOWAVEFORM} = true ]; then \
-   apt-get -y install git wget make cmake gcc g++ libmad0-dev libid3tag0-dev libsndfile1-dev libgd-dev libboost-filesystem-dev libboost-program-options-dev libboost-regex-dev \
+   apt-get install -yqq wget make cmake gcc g++ libmad0-dev libid3tag0-dev libsndfile1-dev libgd-dev libboost-filesystem-dev libboost-program-options-dev libboost-regex-dev \
    && git clone https://github.com/bbc/audiowaveform.git \
    && cd audiowaveform \
    && wget https://github.com/google/googletest/archive/release-1.10.0.tar.gz \
@@ -1443,17 +1433,17 @@ USER root
 ARG INSTALL_WKHTMLTOPDF=false
 
 RUN if [ ${INSTALL_WKHTMLTOPDF} = true ]; then \
-   apt-get install -y \
-   libxrender1 \
-   libfontconfig1 \
-   libx11-dev \
-   libjpeg62 \
-   libxtst6 \
-   fontconfig \
-   libjpeg-turbo8-dev \
-   xfonts-base \
-   xfonts-75dpi \
-   wget \
+   apt-get install -yqq \
+     libxrender1 \
+     libfontconfig1 \
+     libx11-dev \
+     libjpeg62 \
+     libxtst6 \
+     fontconfig \
+     libjpeg-turbo8-dev \
+     xfonts-base \
+     xfonts-75dpi \
+     wget \
    && wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.bionic_amd64.deb \
    && dpkg -i wkhtmltox_0.12.6-1.bionic_amd64.deb \
    && apt -f install \
@@ -1478,7 +1468,7 @@ USER root
 ARG INSTALL_GNU_PARALLEL=false
 
 RUN if [ ${INSTALL_GNU_PARALLEL} = true ]; then \
-  apt-get -y install parallel \
+  apt-get install -yqq parallel \
 ;fi
 
 ###########################################################################
@@ -1512,7 +1502,7 @@ RUN if [ ${INSTALL_XMLRPC} = true ]; then \
 ARG INSTALL_LNAV=false
 
 RUN if [ ${INSTALL_LNAV} = true ]; then \
-    apt-get install -y lnav \
+    apt-get install -yqq lnav \
 ;fi
 
 ###########################################################################
@@ -1619,8 +1609,6 @@ RUN if [ ${SHELL_OH_MY_ZSH} = true ]; then \
     echo "source ~/aliases.sh" >> ~/.zshrc && \
 	  echo "" >> ~/.zshrc \
 ;fi
-
-USER root
 
 #
 #--------------------------------------------------------------------------

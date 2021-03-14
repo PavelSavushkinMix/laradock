@@ -19,20 +19,21 @@ RUN if [ ${CHANGE_SOURCE} = true ]; then \
     sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/' /etc/apk/repositories \
 ;fi
 
-RUN apk --update add wget \
-  curl \
-  git \
-  build-base \
-  libmemcached-dev \
-  libmcrypt-dev \
-  libxml2-dev \
-  zlib-dev \
-  autoconf \
-  cyrus-sasl-dev \
-  libgsasl-dev \
-  supervisor \
-  oniguruma-dev \
-  procps
+RUN apk update -q
+  apk add -q wget \
+    curl \
+    git \
+    build-base \
+    libmemcached-dev \
+    libmcrypt-dev \
+    libxml2-dev \
+    zlib-dev \
+    autoconf \
+    cyrus-sasl-dev \
+    libgsasl-dev \
+    supervisor \
+    oniguruma-dev \
+    procps
 
 RUN docker-php-ext-install mysqli mbstring pdo pdo_mysql tokenizer xml pcntl
 RUN pecl channel-update pecl.php.net && pecl install memcached mcrypt-1.0.1 mongodb && docker-php-ext-enable memcached mongodb
@@ -49,14 +50,14 @@ RUN addgroup -g ${PGID} laradock && \
 #Install BZ2:
 ARG INSTALL_BZ2=false
 RUN if [ ${INSTALL_BZ2} = true ]; then \
-  apk --update add bzip2-dev; \
+  apk add -q bzip2-dev; \
   docker-php-ext-install bz2 \
 ;fi
 
 #Install GD package:
 ARG INSTALL_GD=false
 RUN if [ ${INSTALL_GD} = true ]; then \
-   apk add --update --no-cache freetype-dev libjpeg-turbo-dev jpeg-dev libpng-dev; \
+   apk add -q freetype-dev libjpeg-turbo-dev jpeg-dev libpng-dev; \
    if [ ${LARADOCK_PHP_VERSION} = "7.4" ]; then \
       docker-php-ext-configure gd --with-freetype --with-jpeg; \
    else \
@@ -68,7 +69,7 @@ RUN if [ ${INSTALL_GD} = true ]; then \
 #Install GMP package:
 ARG INSTALL_GMP=false
 RUN if [ ${INSTALL_GMP} = true ]; then \
-   apk add --update --no-cache gmp gmp-dev; \
+   apk add -q gmp gmp-dev; \
    docker-php-ext-install gmp \
 ;fi
 
@@ -78,9 +79,8 @@ ARG IMAGEMAGICK_VERSION=latest
 ENV IMAGEMAGICK_VERSION ${IMAGEMAGICK_VERSION}
 RUN set -eux; \
   if [ ${INSTALL_IMAGEMAGICK} = true ]; then \
-    apk add --update --no-cache imagemagick-dev; \
+    apk add -q imagemagick-dev; \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ]; then \
-      apk add --update --no-cache git && \
       cd /tmp && \
       if [ ${IMAGEMAGICK_VERSION} = "latest" ]; then \
         git clone https://github.com/Imagick/imagick; \
@@ -115,7 +115,7 @@ RUN if [ ${INSTALL_SOCKETS} = true ]; then \
 # Install PostgreSQL drivers:
 ARG INSTALL_PGSQL=false
 RUN if [ ${INSTALL_PGSQL} = true ]; then \
-  apk --update add postgresql-dev \
+  apk add -q postgresql-dev \
   && docker-php-ext-install pdo_pgsql \
   ;fi
 
@@ -123,7 +123,7 @@ RUN if [ ${INSTALL_PGSQL} = true ]; then \
 ARG INSTALL_ZIP_ARCHIVE=false
 RUN set -eux; \
   if [ ${INSTALL_ZIP_ARCHIVE} = true ]; then \
-    apk --update add libzip-dev && \
+    apk add -q libzip-dev && \
     if [ ${LARADOCK_PHP_VERSION} = "7.3" ] || [ ${LARADOCK_PHP_VERSION} = "7.4" ] || [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ]; then \
       docker-php-ext-configure zip; \
     else \
@@ -145,14 +145,15 @@ RUN if [ ${INSTALL_PHPREDIS} = true ]; then \
 ARG INSTALL_FFMPEG=false
 RUN if [ ${INSTALL_FFMPEG} = true ]; then \
    # Add ffmpeg to horizon
-    apk add ffmpeg \
+    apk add -q ffmpeg \
 ;fi
 
 # Install BBC Audio Waveform Image Generator:
 ARG INSTALL_AUDIOWAVEFORM=false
 RUN if [ ${INSTALL_AUDIOWAVEFORM} = true ]; then \
-   apk add git make cmake gcc g++ libmad-dev libid3tag-dev libsndfile-dev gd-dev boost-dev libgd libpng-dev zlib-dev \
-   && apk add autoconf automake libtool gettext \
+   apk add -q git make cmake gcc g++ libmad-dev libid3tag-dev libsndfile-dev \
+      gd-dev boost-dev libgd libpng-dev zlib-dev \
+      autoconf automake libtool gettext \
    && wget https://github.com/xiph/flac/archive/1.3.3.tar.gz \
    && tar xzf 1.3.3.tar.gz \
    && cd flac-1.3.3 \
@@ -178,8 +179,8 @@ RUN if [ ${INSTALL_AUDIOWAVEFORM} = true ]; then \
 # Install Cassandra drivers:
 ARG INSTALL_CASSANDRA=false
 RUN if [ ${INSTALL_CASSANDRA} = true ]; then \
-  apk --update add cassandra-cpp-driver \
-  ;fi
+  apk add -qcassandra-cpp-driver \
+;fi
 
 WORKDIR /usr/src
 RUN if [ ${INSTALL_CASSANDRA} = true ]; then \
@@ -209,8 +210,8 @@ RUN if [ ${INSTALL_MONGO} = true ]; then \
 ARG INSTALL_YAML=false
 
 RUN if [ ${INSTALL_YAML} = true ]; then \
-     apk --update add -U --no-cache --virtual temp yaml-dev \
-     && apk add --no-cache yaml \
+     apk add -q -U --no-cache --virtual temp yaml-dev \
+     && apk add -q yaml \
      && docker-php-source extract \
      && pecl channel-update pecl.php.net \
      && pecl install yaml \
