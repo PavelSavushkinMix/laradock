@@ -6,8 +6,3 @@ apt-get install -yqq \
   libzip-dev \
   zip \
   unzip;
-
-###
-# Place your script below
-
-

@@ -15,6 +15,3 @@ apk --update -q add wget \
   openssl-dev \
   supervisor;
 pecl channel-update pecl.php.net;
-
-###
-# Place your script below
