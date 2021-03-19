@@ -1,0 +1,7 @@
+*
+!common
+!konsole
+!.gitignore
+!php-alpine.sh.example
+!php-fpm.sh.example
+!workspace.sh.example

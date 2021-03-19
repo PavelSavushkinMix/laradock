@@ -10,8 +10,3 @@ apt-get install -yqq \
   zip \
   unzip \
   nasm
-
-###
-# Place your script below
-
-
