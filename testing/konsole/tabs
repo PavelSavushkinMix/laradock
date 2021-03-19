@@ -1,0 +1,23 @@
+title: w-8.0;; command: docker run --rm -it -v $PWD/workspace.sh:/script.sh -e LARADOCK_PHP_VERSION=8.0 laradock/workspace:latest-8.0 bash /script.sh
+title: w-7.4;; command: docker run --rm -it -v $PWD/workspace.sh:/script.sh -e LARADOCK_PHP_VERSION=7.4 laradock/workspace:latest-7.4 bash /script.sh
+title: w-7.3;; command: docker run --rm -it -v $PWD/workspace.sh:/script.sh -e LARADOCK_PHP_VERSION=7.3 laradock/workspace:latest-7.3 bash /script.sh
+title: w-7.2;; command: docker run --rm -it -v $PWD/workspace.sh:/script.sh -e LARADOCK_PHP_VERSION=7.2 laradock/workspace:latest-7.2 bash /script.sh
+title: w-7.1;; command: docker run --rm -it -v $PWD/workspace.sh:/script.sh -e LARADOCK_PHP_VERSION=7.1 laradock/workspace:latest-7.1 bash /script.sh
+title: w-7.0;; command: docker run --rm -it -v $PWD/workspace.sh:/script.sh -e LARADOCK_PHP_VERSION=7.0 laradock/workspace:latest-7.0 bash /script.sh
+title: w-5.6;; command: docker run --rm -it -v $PWD/workspace.sh:/script.sh -e LARADOCK_PHP_VERSION=5.6 laradock/workspace:latest-5.6 bash /script.sh
+
+title: fpm-8.0;; command: docker run --rm -it -v $PWD/php-fpm.sh:/script.sh -e LARADOCK_PHP_VERSION=8.0 laradock/php-fpm:latest-8.0 bash /script.sh
+title: fpm-7.4;; command: docker run --rm -it -v $PWD/php-fpm.sh:/script.sh -e LARADOCK_PHP_VERSION=7.4 laradock/php-fpm:latest-7.4 bash /script.sh
+title: fpm-7.3;; command: docker run --rm -it -v $PWD/php-fpm.sh:/script.sh -e LARADOCK_PHP_VERSION=7.3 laradock/php-fpm:latest-7.3 bash /script.sh
+title: fpm-7.2;; command: docker run --rm -it -v $PWD/php-fpm.sh:/script.sh -e LARADOCK_PHP_VERSION=7.2 laradock/php-fpm:latest-7.2 bash /script.sh
+title: fpm-7.1;; command: docker run --rm -it -v $PWD/php-fpm.sh:/script.sh -e LARADOCK_PHP_VERSION=7.1 laradock/php-fpm:latest-7.1 bash /script.sh
+title: fpm-7.0;; command: docker run --rm -it -v $PWD/php-fpm.sh:/script.sh -e LARADOCK_PHP_VERSION=7.0 laradock/php-fpm:latest-7.0 bash /script.sh
+title: fpm-5.6;; command: docker run --rm -it -v $PWD/php-fpm.sh:/script.sh -e LARADOCK_PHP_VERSION=5.6 laradock/php-fpm:latest-5.6 bash /script.sh
+
+title: a-8.0;; command: docker run --rm -it -v $PWD/php-alpine.sh:/script.sh -e LARADOCK_PHP_VERSION=8.0 php:8.0-alpine sh /script.sh
+title: a-7.4;; command: docker run --rm -it -v $PWD/php-alpine.sh:/script.sh -e LARADOCK_PHP_VERSION=7.4 php:7.4-alpine sh /script.sh
+title: a-7.3;; command: docker run --rm -it -v $PWD/php-alpine.sh:/script.sh -e LARADOCK_PHP_VERSION=7.3 php:7.3-alpine sh /script.sh
+title: a-7.2;; command: docker run --rm -it -v $PWD/php-alpine.sh:/script.sh -e LARADOCK_PHP_VERSION=7.2 php:7.2-alpine sh /script.sh
+title: a-7.1;; command: docker run --rm -it -v $PWD/php-alpine.sh:/script.sh -e LARADOCK_PHP_VERSION=7.1 php:7.1-alpine sh /script.sh
+title: a-7.0;; command: docker run --rm -it -v $PWD/php-alpine.sh:/script.sh -e LARADOCK_PHP_VERSION=7.0 php:7.0-alpine sh /script.sh
+title: a-5.6;; command: docker run --rm -it -v $PWD/php-alpine.sh:/script.sh -e LARADOCK_PHP_VERSION=5.6 php:5.6-alpine sh /script.sh
